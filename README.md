@@ -9,7 +9,7 @@ self-complementarity, and generating a summary report.
 ## Members
 - Maria Szczerbinska - [nicolas-bourbaki03](https://github.com/nicolas-bourbaki03)
 - Agata Dubinska - [Agatadubinska](https://github.com/Agatadubinska)
-- Katarzyna Makowska - [makowskakatarzyna636-sudo](https://github.com/makowskakatarzyna636-sudo)
+- Katarzyna Makowska - [kmakowska22-glitch](https://github.com/kmakowska22-glitch)
 
 ## Repository
 [github.com/nicolas-bourbaki03/PCRpal](https://github.com/nicolas-bourbaki03/PCRpal)
