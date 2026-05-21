@@ -1,6 +1,25 @@
 import argparse
 import sys
+import csv
 from parser import load_and_validate
+
+def save_report(results, output_file):
+    try:
+        with open(output_file, mode='w', newline='', encoding='utf-8') as f:
+            fieldnames = ['Name', 'Sequence', 'Status']
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            
+            writer.writeheader()
+            for name, data in results.items():
+                writer.writerow({
+                    'Name': name,
+                    'Sequence': data['seq'],
+                    'Status': data['status']
+                })
+        return True
+    except Exception as e:
+        print(f"Error saving file: {e}")
+        return False
 
 def main():
     parser = argparse.ArgumentParser(
@@ -8,7 +27,7 @@ def main():
     )
     parser.add_argument(
         "input", 
-        help="Path to the input file with primers (.csv or .fasta)"
+        help="Path to the input file (.csv or .fasta)"
     )
     parser.add_argument(
         "-o", "--output", 
@@ -18,35 +37,38 @@ def main():
     
     args = parser.parse_args()
 
-    print(f"Loading primers from file: {args.input}...")
+    print(f"--- PCRpal Starter ---")
+    print(f"Loading: {args.input}")
     
     try:
         valid_primers, errors = load_and_validate(args.input)
     except FileNotFoundError:
         print(f"Error: File {args.input} does not exist.")
         sys.exit(1)
-    except ValueError as e:
+    except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)
-
     if errors:
-        print("\n⚠️ Found issues with the following primers (they will be skipped):")
-        for name, err in errors.items():
-            print(f" - {name}: {err}")
+        print(f"\nSkipped {len(errors)} invalid sequences (check logs).")
             
     if not valid_primers:
-        print("\nNo valid primers to analyze. Aborting.")
+        print("\nNo valid primers found. Aborting.")
         sys.exit(1)
 
-    print(f"\nSuccessfully loaded {len(valid_primers)} primers. Starting analysis...\n")
+    print(f"Processing {len(valid_primers)} primers")
 
     results = {}
     for name, seq in valid_primers.items():
-        results[name] = {"seq": seq, "status": "Waiting for P2 and P3 code"}
-    
-    print(results)
-    
-    print(f"\nDone! The report will be saved to: {args.output}")
+        short_name = name[:30] + "..." if len(name) > 33 else name
+        
+        results[short_name] = {
+            "seq": seq, 
+            "status": "Validated - Waiting for analysis"
+        }
+    if save_report(results, args.output):
+        print(f"\nSuccess! Analysis saved to: {args.output}")
+    else:
+        print("\nFailed to save the report.")
 
 if __name__ == "__main__":
     main()
