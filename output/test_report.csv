@@ -1,0 +1,4 @@
+name,sequence,length,tm_wallace,gc_content,gc_ok,length_ok,self_complementarity,dimer
+primer_forward,CCTCTGCGGTGCCAAGCCTC,20,64,65.0,False,True,False,True
+primer_reverse,CGTGGTGGTCCCGGCCGCC,19,70,78.9,False,True,True,True
+primer_ok,ATGCGTACGTAGCTAGCTA,19,56,47.4,True,True,False,False
