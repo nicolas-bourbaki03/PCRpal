@@ -41,7 +41,7 @@ def dimer_check(seq1, seq2, min_match=4):
     return False
 
 
-# quick test - mozna usunac pozniej
+# quick test
 if __name__ == "__main__":
     primer_f = "ATGCATGCATGC"
     primer_r = "GCTAGCTAGCTA"
