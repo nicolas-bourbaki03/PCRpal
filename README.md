@@ -3,7 +3,8 @@
 **Python CLI tool for batch validation and analysis of PCR primers**
 
 > Agata Dubińska [Agatadubinska](https://github.com/Agatadubinska), Katarzyna Makowska [kmakowska22-glitch](https://github.com/kmakowska22-glitch), Maria Szczerbińska [nicolas-bourbaki03](https://github.com/nicolas-bourbaki03)
-> Architecture of Large Projects in Bioinformatics, 2026
+>
+> Architecture of Large Projects in Bioinformatics, 2026 | Master Studies in Bioinformatics at University of Warsaw
 
 ---
 
