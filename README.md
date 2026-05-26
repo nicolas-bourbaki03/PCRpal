@@ -27,10 +27,9 @@ single input file, saving time and reducing human error.
 - CSV report generation
 - Data visualization (scatter plot Tm vs GC, bar chart of flags)
 
----
-
 ## Project Structure
 
+```
 PCRpal/
 ├── README.md
 ├── LICENSE
@@ -45,6 +44,7 @@ PCRpal/
 ├── data/
 │   └── sequence.fasta  # example primer sequences
 └── output/             # generated reports and plots
+```
 
 ---
 
