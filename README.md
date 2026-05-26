@@ -18,7 +18,7 @@ single input file, saving time and reducing human error.
 
 ## Features
 
-- Melting temperature (Tm) calculation — Wallace rule
+- Melting temperature (Tm) calculation - Wallace rule
 - GC content calculation with out-of-range flagging (optimal: 40–60%)
 - Sequence length validation (optimal: 18–25 bp)
 - Input sequence validation (only ATGC allowed)
@@ -90,7 +90,7 @@ primer_reverse,GCTAGCTAGCTAGCTA
 ## Modules
 
 ### `parser.py`
-Reads FASTA and CSV input files. Validates each sequence — checks for invalid
+Reads FASTA and CSV input files. Validates each sequence - checks for invalid
 characters and minimum length (15 bp). Returns a dictionary of valid primers
 and a separate dictionary of errors.
 
@@ -123,5 +123,5 @@ pip install -r requirements.txt
 
 ## References
 
-- Untergasser et al. (2012) — Primer3: https://doi.org/10.1093/nar/gks596  
-- Kibbe (2007) — OligoCalc: https://doi.org/10.1093/nar/gkm234
+- Untergasser et al. (2012) - Primer3: https://doi.org/10.1093/nar/gks596  
+- Kibbe (2007) - OligoCalc: https://doi.org/10.1093/nar/gkm234
