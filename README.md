@@ -2,7 +2,7 @@
 
 **Python CLI tool for batch validation and analysis of PCR primers**
 
-> Agata Dubińska [Agatadubinska](https://github.com/Agatadubinska), Katarzyna Makowska [kmakowska22-glitch](https://github.com/kmakowska22-glitch), Maria Szczerbińska [nicolas-bourbaki03](https://github.com/nicolas-bourbaki03)
+> Maria Szczerbińska - team leader [nicolas-bourbaki03](https://github.com/nicolas-bourbaki03), Agata Dubińska [Agatadubinska](https://github.com/Agatadubinska), Katarzyna Makowska [kmakowska22-glitch](https://github.com/kmakowska22-glitch)
 >
 > Architecture of Large Projects in Bioinformatics, 2026 | Master Studies in Bioinformatics at University of Warsaw
 
@@ -46,6 +46,22 @@ PCRpal/
 │   └── sequence.fasta  # example primer sequences
 └── output/             # generated reports and plots
 ```
+
+## Tasks
+
+### Main tasks
+- [x] Input parser (FASTA + CSV)
+- [x] Tm calculation (Wallace rule)
+- [x] GC content + length validation
+- [x] Self-complementarity check
+- [x] Primer dimer detection
+- [x] CSV report export
+- [x] Matplotlib visualizations
+
+### Extra tasks (if time allows)
+- [ ] Nearest-neighbour Tm calculation
+- [ ] BLAST integration
+- [ ] GUI via Streamlit
 
 ---
 
