@@ -43,8 +43,13 @@ PCRpal/
 ├── tests/
 │   └── test_dimers.py  # unit tests for dimers module
 ├── data/
-│   └── sequence.fasta  # example primer sequences
+│   ├── sequence.fasta  # example primer sequences
+│   └── pcrpal_report.csv     
 └── output/             # generated reports and plots
+    ├── flags.png
+    ├── gc_vs_tm.png
+    └── test_report.csv
+
 ```
 
 ## Tasks
@@ -57,11 +62,6 @@ PCRpal/
 - [x] Primer dimer detection
 - [x] CSV report export
 - [x] Matplotlib visualizations
-
-### Extra tasks (if time allows)
-- [ ] Nearest-neighbour Tm calculation
-- [ ] BLAST integration
-- [ ] GUI via Streamlit
 
 ---
 
