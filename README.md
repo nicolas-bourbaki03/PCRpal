@@ -78,12 +78,22 @@ pip install -r requirements.txt
 ## Usage
 
 ```bash
-# basic usage
-python main.py data/sequence.fasta
+# single file
+python scripts/main.py data/sequence.fasta
 
-# save results to custom CSV file
-python main.py data/sequence.fasta -o results.csv
+# single file with plots
+python scripts/main.py data/sequence.fasta --plots
+
+# multiple files — comparison mode
+python scripts/main.py data/file1.fasta data/file2.fasta data/file3.fasta --plots
+
+# custom output directory
+python scripts/main.py data/sequence.fasta --plots -o results/
 ```
+
+Each input file gets its own CSV report. Plots compare all datasets:
+- `gc_vs_tm.png` - scatter plot of Tm vs GC content, one color per dataset
+- `flags_summary.png`- bar chart of flagged primer percentages per dataset
 
 ---
 

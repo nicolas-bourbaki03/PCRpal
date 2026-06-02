@@ -1,16 +1,16 @@
 # report.py
 
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 import csv
 import os
-import matplotlib.pyplot as plt
+import random
 
 
 def save_csv(results, output_path):
     """
     Saves analysis results to a CSV file.
-    results: list of dicts with keys: name, sequence, tm, gc_content, length,
-             gc_ok, length_ok, self_complementarity, dimer
-    output_path: str, path to output CSV file
     """
     os.makedirs(os.path.dirname(output_path), exist_ok=True) if os.path.dirname(output_path) else None
 
@@ -25,110 +25,94 @@ def save_csv(results, output_path):
         for row in results:
             writer.writerow(row)
 
-    print(f"CSV report saved to: {output_path}")
+    print(f"  CSV report saved to: {output_path}")
 
 
-def plot_gc_tm(results, output_path="output/gc_vs_tm.png"):
+def plot_gc_tm_multi(all_results, output_path="output/gc_vs_tm.png", max_points=500):
     """
-    Scatter plot: Tm vs GC content per primer.
+    Scatter plot: Tm vs GC content, one color per input file.
+    Samples up to max_points per dataset for readability.
     """
-    names = [r['name'] for r in results]
-    gc = [r['gc_content'] for r in results]
-    tm = [r['tm_wallace'] for r in results]
+    colors = ['steelblue', 'tomato', 'seagreen', 'darkorange', 'mediumpurple']
 
-    plt.figure(figsize=(10, 6))
-    plt.scatter(gc, tm, color='steelblue', edgecolors='black', alpha=0.7)
+    plt.figure(figsize=(12, 7))
 
-    for i, name in enumerate(names):
-        plt.annotate(name[:15], (gc[i], tm[i]), fontsize=6, alpha=0.6)
+    for i, (label, results) in enumerate(all_results.items()):
+        # sample if too many points
+        sample = random.sample(results, min(max_points, len(results)))
+        gc = [r['gc_content'] for r in sample]
+        tm = [r['tm_wallace'] for r in sample]
+        color = colors[i % len(colors)]
+        plt.scatter(gc, tm, color=color, edgecolors='none',
+                    alpha=0.5, s=20, label=f"{label} (n={len(results)})")
 
-    plt.axvline(x=40, color='red', linestyle='--', linewidth=0.8, label='GC min (40%)')
-    plt.axvline(x=60, color='red', linestyle='--', linewidth=0.8, label='GC max (60%)')
+    plt.axvline(x=40, color='red', linestyle='--', linewidth=1, label='GC min (40%)')
+    plt.axvline(x=60, color='red', linestyle='--', linewidth=1, label='GC max (60%)')
 
     plt.xlabel('GC Content (%)')
     plt.ylabel('Melting Temperature Tm (°C)')
-    plt.title('Tm vs GC Content per Primer')
-    plt.legend()
+    plt.title('Tm vs GC Content per Dataset')
+    plt.legend(loc='upper left')
     plt.tight_layout()
 
     os.makedirs(os.path.dirname(output_path), exist_ok=True) if os.path.dirname(output_path) else None
     plt.savefig(output_path, dpi=150)
     plt.close()
-    print(f"Scatter plot saved to: {output_path}")
+    print(f"  Scatter plot saved to: {output_path}")
 
 
-def plot_flags(results, output_path="output/flags.png"):
+def plot_flags_multi(all_results, output_path="output/flags_summary.png"):
     """
-    Bar chart: flagged issues per primer.
+    Bar chart: percentage of flagged primers per dataset, grouped by flag type.
+    all_results: dict {label: [list of result dicts]}
     """
-    names = [r['name'][:20] for r in results]
-    flags = []
+    labels = list(all_results.keys())
+    flag_types = ['gc_out', 'length_out', 'self_comp', 'dimer']
+    flag_labels = ['GC out of range', 'Length out of range',
+                   'Self-complementarity', 'Primer dimer']
+    colors = ['tomato', 'darkorange', 'steelblue', 'seagreen']
 
-    for r in results:
-        count = 0
-        if not r.get('gc_ok', True):
-            count += 1
-        if not r.get('length_ok', True):
-            count += 1
-        if r.get('self_complementarity', False):
-            count += 1
-        if r.get('dimer', False):
-            count += 1
-        flags.append(count)
+    x = range(len(labels))
+    width = 0.2
 
-    colors = ['green' if f == 0 else 'orange' if f == 1 else 'red' for f in flags]
+    fig, ax = plt.subplots(figsize=(max(8, len(labels) * 2), 6))
 
-    plt.figure(figsize=(max(10, len(names) * 0.5), 6))
-    plt.bar(names, flags, color=colors, edgecolor='black')
-    plt.xticks(rotation=45, ha='right', fontsize=7)
-    plt.ylabel('Number of Flags')
-    plt.title('Flagged Issues per Primer')
+    for i, (flag, flag_label, color) in enumerate(zip(flag_types, flag_labels, colors)):
+        percentages = []
+        for label in labels:
+            results = all_results[label]
+            total = len(results)
+            if total == 0:
+                percentages.append(0)
+                continue
+            if flag == 'gc_out':
+                count = sum(1 for r in results if not r['gc_ok'])
+            elif flag == 'length_out':
+                count = sum(1 for r in results if not r['length_ok'])
+            elif flag == 'self_comp':
+                count = sum(1 for r in results if r['self_complementarity'])
+            elif flag == 'dimer':
+                count = sum(1 for r in results if r['dimer'])
+            percentages.append(round(count / total * 100, 1))
+
+        offset = [xi + i * width for xi in x]
+        bars = ax.bar(offset, percentages, width, label=flag_label, color=color, alpha=0.8)
+
+        # add % labels on bars
+        for bar, pct in zip(bars, percentages):
+            if pct > 0:
+                ax.text(bar.get_x() + bar.get_width() / 2,
+                        bar.get_height() + 0.5,
+                        f'{pct}%', ha='center', va='bottom', fontsize=8)
+
+    ax.set_xticks([xi + width * 1.5 for xi in x])
+    ax.set_xticklabels(labels, rotation=15, ha='right')
+    ax.set_ylabel('Flagged primers (%)')
+    ax.set_title('Primer Quality Flags by Dataset')
+    ax.legend(loc='upper right')
     plt.tight_layout()
 
     os.makedirs(os.path.dirname(output_path), exist_ok=True) if os.path.dirname(output_path) else None
     plt.savefig(output_path, dpi=150)
     plt.close()
-    print(f"Flag chart saved to: {output_path}")
-
-
-# quick test - can be removed later
-if __name__ == "__main__":
-    test_results = [
-        {
-            'name': 'primer_forward',
-            'sequence': 'CCTCTGCGGTGCCAAGCCTC',
-            'length': 20,
-            'tm_wallace': 64,
-            'gc_content': 65.0,
-            'gc_ok': False,
-            'length_ok': True,
-            'self_complementarity': False,
-            'dimer': True
-        },
-        {
-            'name': 'primer_reverse',
-            'sequence': 'CGTGGTGGTCCCGGCCGCC',
-            'length': 19,
-            'tm_wallace': 70,
-            'gc_content': 78.9,
-            'gc_ok': False,
-            'length_ok': True,
-            'self_complementarity': True,
-            'dimer': True
-        },
-        {
-            'name': 'primer_ok',
-            'sequence': 'ATGCGTACGTAGCTAGCTA',
-            'length': 19,
-            'tm_wallace': 56,
-            'gc_content': 47.4,
-            'gc_ok': True,
-            'length_ok': True,
-            'self_complementarity': False,
-            'dimer': False
-        }
-    ]
-
-    save_csv(test_results, "output/test_report.csv")
-    plot_gc_tm(test_results, "output/gc_vs_tm.png")
-    plot_flags(test_results, "output/flags.png")
+    print(f"  Flag summary chart saved to: {output_path}")
