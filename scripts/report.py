@@ -40,8 +40,8 @@ def plot_gc_tm_multi(all_results, output_path="output/gc_vs_tm.png", max_points=
     for i, (label, results) in enumerate(all_results.items()):
         # sample if too many points
         sample = random.sample(results, min(max_points, len(results)))
-        gc = [r['gc_content'] for r in sample]
-        tm = [r['tm_wallace'] for r in sample]
+        gc = [r['gc_content'] for r in sample if r['tm_wallace'] <= 100]
+        tm = [r['tm_wallace'] for r in sample if r['tm_wallace'] <= 100]
         color = colors[i % len(colors)]
         plt.scatter(gc, tm, color=color, edgecolors='none',
                     alpha=0.5, s=20, label=f"{label} (n={len(results)})")
@@ -51,7 +51,7 @@ def plot_gc_tm_multi(all_results, output_path="output/gc_vs_tm.png", max_points=
 
     plt.xlabel('GC Content (%)')
     plt.ylabel('Melting Temperature Tm (°C)')
-    plt.title('Tm vs GC Content per Dataset')
+    plt.title('Tm vs GC Content per Dataset', fontweight='bold')
     plt.legend(loc='upper left')
     plt.tight_layout()
 
@@ -62,10 +62,6 @@ def plot_gc_tm_multi(all_results, output_path="output/gc_vs_tm.png", max_points=
 
 
 def plot_flags_multi(all_results, output_path="output/flags_summary.png"):
-    """
-    Bar chart: percentage of flagged primers per dataset, grouped by flag type.
-    all_results: dict {label: [list of result dicts]}
-    """
     labels = list(all_results.keys())
     flag_types = ['gc_out', 'length_out', 'self_comp', 'dimer']
     flag_labels = ['GC out of range', 'Length out of range',
@@ -73,9 +69,10 @@ def plot_flags_multi(all_results, output_path="output/flags_summary.png"):
     colors = ['tomato', 'darkorange', 'steelblue', 'seagreen']
 
     x = range(len(labels))
-    width = 0.2
+    width = 0.18
+    n_flags = len(flag_types)
 
-    fig, ax = plt.subplots(figsize=(max(8, len(labels) * 2), 6))
+    fig, ax = plt.subplots(figsize=(14, 7))
 
     for i, (flag, flag_label, color) in enumerate(zip(flag_types, flag_labels, colors)):
         percentages = []
@@ -95,24 +92,23 @@ def plot_flags_multi(all_results, output_path="output/flags_summary.png"):
                 count = sum(1 for r in results if r['dimer'])
             percentages.append(round(count / total * 100, 1))
 
-        offset = [xi + i * width for xi in x]
+        offset = [xi + (i - n_flags / 2 + 0.5) * width for xi in x]
         bars = ax.bar(offset, percentages, width, label=flag_label, color=color, alpha=0.8)
 
-        # add % labels on bars
         for bar, pct in zip(bars, percentages):
             if pct > 0:
                 ax.text(bar.get_x() + bar.get_width() / 2,
                         bar.get_height() + 0.5,
                         f'{pct}%', ha='center', va='bottom', fontsize=8)
 
-    ax.set_xticks([xi + width * 1.5 for xi in x])
-    ax.set_xticklabels(labels, rotation=15, ha='right')
+    ax.set_xticks(list(x))
+    ax.set_xticklabels(labels, rotation=15, ha='right', fontsize=10)
     ax.set_ylabel('Flagged primers (%)')
-    ax.set_title('Primer Quality Flags by Dataset')
-    ax.legend(loc='upper right')
+    ax.set_title('Primer Quality Flags by Dataset', fontweight='bold')
+    ax.legend(bbox_to_anchor=(1.02, 1), loc='upper left', borderaxespad=0)
     plt.tight_layout()
 
     os.makedirs(os.path.dirname(output_path), exist_ok=True) if os.path.dirname(output_path) else None
-    plt.savefig(output_path, dpi=150)
+    plt.savefig(output_path, dpi=150, bbox_inches='tight')
     plt.close()
     print(f"  Flag summary chart saved to: {output_path}")
