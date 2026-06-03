@@ -1,6 +1,2 @@
 matplotlib
 numpy
-sys
-os
-argparse
-csv
