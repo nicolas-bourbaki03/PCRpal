@@ -158,5 +158,8 @@ pip install -r requirements.txt
 
 ## References
 
-- Untergasser et al. (2012) - Primer3: https://doi.org/10.1093/nar/gks596  
-- Kibbe (2007) - OligoCalc: https://doi.org/10.1093/nar/gkm234
+- Untergasser et al. (2012) - *Primer3—new capabilities and interfaces*: https://doi.org/10.1093/nar/gks596
+- Kibbe (2007) - *OligoCalc: an online oligonucleotide properties calculator*: https://doi.org/10.1093/nar/gkm234
+- Wallace R.B. et al. (1979) - *Hybridization of synthetic oligodeoxyribonucleotides to φX 174 DNA: the effect of single base pair mismatch*: https://doi.org/10.1093/nar/6.11.3543
+- Brownie J. et al. (1997) - *The elimination of primer-dimer accumulation in PCR*: https://doi.org/10.1093/nar/25.16.3235
+- Rychlik W., Rhoads R.E. (1989) - *A computer program for choosing optimal oligonucleotides for filter hybridization, sequencing and in vitro amplification of DNA*: https://doi.org/10.1093/nar/17.21.8543
