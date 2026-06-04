@@ -36,6 +36,7 @@ PCRpal/
 ├── LICENSE
 ├── requirements.txt
 ├── scripts/
+│   ├── main.py         # orchestrates the pipeline, CLI interface
 │   ├── parser.py       # input file reading and validation (FASTA, CSV)
 │   ├── calc.py         # Tm, GC content, length calculations
 │   ├── dimers.py       # self-complementarity and dimer check
@@ -43,13 +44,12 @@ PCRpal/
 ├── tests/
 │   └── test_dimers.py  # unit tests for dimers module
 ├── data/
-│   ├── sequence.fasta  # example primer sequences
-│   └── pcrpal_report.csv     
+│   ├── sequence.fasta
+│   ├── sequence_homo_sapiens.fasta
+│   ├── sequence_bacterial.fasta
+│   ├── sequence_viral.fasta
+│   └── sequence_SRT_marker.fasta
 └── output/             # generated reports and plots
-    ├── flags.png
-    ├── gc_vs_tm.png
-    └── test_report.csv
-
 ```
 
 ## Tasks
@@ -62,6 +62,8 @@ PCRpal/
 - [x] Primer dimer detection
 - [x] CSV report export
 - [x] Matplotlib visualizations
+- [x] Multi-dataset comparison mode
+- [x] Project repository setup (README, licence, structure)
 
 ---
 
@@ -84,7 +86,7 @@ python scripts/main.py data/sequence.fasta
 # single file with plots
 python scripts/main.py data/sequence.fasta --plots
 
-# multiple files — comparison mode
+# multiple files - comparison mode
 python scripts/main.py data/file1.fasta data/file2.fasta data/file3.fasta --plots
 
 # custom output directory
@@ -102,19 +104,25 @@ Each input file gets its own CSV report. Plots compare all datasets:
 PCRpal accepts **FASTA** or **CSV** files.
 
 **FASTA example:**
-primer_forward
+```
+>primer_forward
 ATGCATGCATGCATGC
-primer_reverse
+>primer_reverse
 GCTAGCTAGCTAGCTA
-
+```
+```
 **CSV example:**
 name,sequence
 primer_forward,ATGCATGCATGCATGC
 primer_reverse,GCTAGCTAGCTAGCTA
-
+```
 ---
 
 ## Modules
+
+### `main.py`
+Orchestrates the full pipeline. Accepts one or more FASTA/CSV files via CLI,
+runs parsing, analysis, dimer checks, and generates reports and plots.
 
 ### `parser.py`
 Reads FASTA and CSV input files. Validates each sequence - checks for invalid
