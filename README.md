@@ -1,5 +1,8 @@
 # PCRpal
 
+<img width="1080" height="527" alt="Screenshot_20260610_102343_Claude" src="https://github.com/user-attachments/assets/65630f85-25b6-4890-8cb1-73ab74f5f497" />
+
+
 **Python CLI tool for batch validation and analysis of PCR primers**
 
 > Maria Szczerbińska - team leader [nicolas-bourbaki03](https://github.com/nicolas-bourbaki03), Agata Dubińska [Agatadubinska](https://github.com/Agatadubinska), Katarzyna Makowska [kmakowska22-glitch](https://github.com/kmakowska22-glitch)
@@ -35,6 +38,9 @@ PCRpal/
 ├── README.md
 ├── LICENSE
 ├── requirements.txt
+├── presentation/
+│   ├── PCRpal_presentation.pdf
+│   └── PCRpal_presentation.pptx
 ├── scripts/
 │   ├── main.py         # orchestrates the pipeline, CLI interface
 │   ├── parser.py       # input file reading and validation (FASTA, CSV)
